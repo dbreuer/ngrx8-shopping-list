@@ -1,0 +1,32 @@
+<div id="wrapper">
+  <div [class.loading]="(loading$ | async)" id="shopping-list" *ngIf="!(error$ | async); else error">
+    <div id="list">
+      <h2>
+        Shopping List
+      </h2>
+
+      <ul *ngIf="(shoppingItems | async)?.length > 0; else noItems">
+        <li title="Delete item" *ngFor="let shopping of shoppingItems | async">
+          <span>{{ shopping.name }}</span>
+          <small (click)="deleteItem(shopping.id)">Remove</small>
+        </li>
+      </ul>
+
+      <ng-template #noItems>
+        <ul>
+          <li style="max-width:250px;margin:0 auto;">No items found. Are you sure there's <em>nothing</em> you want?
+          </li>
+        </ul>
+      </ng-template>
+    </div>
+
+    <form (ngSubmit)="addItem()">
+      <input type="text" [(ngModel)]="newShoppingItem.name" placeholder="Item" name="itemName" required />
+      <button type="submit" [disabled]="!newShoppingItem.name">+</button>
+    </form>
+  </div>
+</div>
+
+<ng-template #error>
+  <h2>{{(error$ | async)?.message}}</h2>
+</ng-template>
